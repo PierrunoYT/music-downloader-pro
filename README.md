@@ -40,17 +40,24 @@ This is a simple Python command-line tool to download YouTube videos and convert
 To download a YouTube video and convert it to MP3, run:
 
 ```
-python youtube_to_mp3.py <YouTube URL>
+python youtube_to_mp3.py
 ```
 
-Replace `<YouTube URL>` with the URL of the YouTube video you want to download.
+You will be prompted to enter the YouTube URL of the video you want to download.
 
 The MP3 file will be saved in the current directory with the video's title as the filename.
 
 ## Example
 
+When you run the script, you'll see:
+
 ```
-python youtube_to_mp3.py https://www.youtube.com/watch?v=dQw4w9WgXcQ
+Enter the YouTube URL you want to download: 
+```
+
+Then, you can paste or type the URL, for example:
+```
+https://www.youtube.com/watch?v=dQw4w9WgXcQ
 ```
 
 This will download the audio from the video and save it as an MP3 file in the current directory.

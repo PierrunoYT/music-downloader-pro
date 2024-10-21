@@ -1,5 +1,4 @@
 import os
-import sys
 import youtube_dl
 
 def download_youtube_audio(url, output_path='.'):
@@ -17,11 +16,7 @@ def download_youtube_audio(url, output_path='.'):
         ydl.download([url])
 
 def main():
-    if len(sys.argv) < 2:
-        print("Usage: python youtube_to_mp3.py <YouTube URL>")
-        sys.exit(1)
-
-    url = sys.argv[1]
+    url = input("Enter the YouTube URL you want to download: ")
     download_youtube_audio(url)
 
 if __name__ == "__main__":
