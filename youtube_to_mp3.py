@@ -1,5 +1,5 @@
 import os
-import youtube_dl
+import yt_dlp
 
 def download_youtube_audio(url, output_path='.'):
     ydl_opts = {
@@ -12,8 +12,12 @@ def download_youtube_audio(url, output_path='.'):
         'outtmpl': os.path.join(output_path, '%(title)s.%(ext)s'),
     }
 
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([url])
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([url])
+        print("Download completed successfully!")
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
 
 def main():
     url = input("Enter the YouTube URL you want to download: ")
