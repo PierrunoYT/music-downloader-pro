@@ -2,22 +2,25 @@
 
 [![yt-dlp](https://img.shields.io/badge/yt--dlp-2024.10.7-red.svg)](https://github.com/yt-dlp/yt-dlp/releases/tag/2024.10.7)
 
-This is a Python script that allows you to download the audio from YouTube videos and save them as MP3 files.
+This is a Python script with a web interface that allows you to download the audio from YouTube videos and save them as MP3 files.
 
 ## Features
 
 - Download audio from YouTube videos
 - Convert audio to MP3 format
-- Simple command-line interface
+- User-friendly web interface
+- Command-line interface support
 - Progress bar for download status
 - Custom output directory selection
 - YouTube URL validation
+- Responsive design for mobile and desktop
 
 ## Requirements
 
 - Python 3.6+
 - yt-dlp (version 2024.10.7)
 - FFmpeg
+- Modern web browser
 
 ## Installation
 
@@ -35,6 +38,15 @@ This is a Python script that allows you to download the audio from YouTube video
 3. Ensure you have FFmpeg installed on your system. If not, you can download it from [here](https://ffmpeg.org/download.html).
 
 ## Usage
+
+### Web Interface
+
+1. Open the `frontend/index.html` file in your web browser
+2. Enter the YouTube URL in the input field
+3. Click the "Download" button
+4. The MP3 file will be downloaded to your specified directory
+
+### Command Line Interface
 
 Run the script using Python:
 
@@ -75,6 +87,19 @@ yt-dlp==<new_version>
    ```
    pip install -r requirements.txt
    ```
+
+### Project Structure
+
+```
+Youtube2MP3/
+├── frontend/               # Web interface files
+│   ├── index.html         # Main HTML file
+│   ├── styles.css         # CSS styles
+│   └── script.js          # Frontend JavaScript
+├── youtube_to_mp3.py      # Main Python script
+├── requirements.txt       # Python dependencies
+└── tests/                # Test files
+```
 
 ### Running tests
 
