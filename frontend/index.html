@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube to MP3 Converter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>YouTube to MP3 Converter</h1>
+        <div class="converter-form">
+            <div class="input-group">
+                <label for="youtube-url">YouTube URL:</label>
+                <input type="text" id="youtube-url" placeholder="https://www.youtube.com/watch?v=...">
+            </div>
+            <div class="input-group">
+                <label for="output-dir">Output Directory:</label>
+                <input type="text" id="output-dir" placeholder="Leave empty for current directory">
+            </div>
+            <button id="convert-btn">Convert to MP3</button>
+        </div>
+        <div class="status-container">
+            <div id="status-message"></div>
+            <div class="progress-bar">
+                <div id="progress"></div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
