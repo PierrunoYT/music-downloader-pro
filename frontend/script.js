@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const youtubeUrlInput = document.getElementById('youtube-url');
     const outputDirInput = document.getElementById('output-dir');
+    const formatSelect = document.getElementById('format');
     const convertBtn = document.getElementById('convert-btn');
     const statusMessage = document.getElementById('status-message');
     const progressBar = document.getElementById('progress');
@@ -27,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function simulateConversion() {
         const url = youtubeUrlInput.value.trim();
         const outputDir = outputDirInput.value.trim();
+        const format = formatSelect.value;
 
         if (!validateYoutubeUrl(url)) {
             updateStatus('Please enter a valid YouTube URL', true);
@@ -45,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (progress < 30) {
                 updateStatus('Downloading audio...');
             } else if (progress < 60) {
-                updateStatus('Converting to MP3...');
+                updateStatus(`Converting to ${format.toUpperCase()}...`);
             } else if (progress < 90) {
                 updateStatus('Processing...');
             }
@@ -53,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (progress >= 100) {
                 clearInterval(interval);
                 const downloadLocation = outputDir || 'downloads folder';
-                updateStatus(`Conversion completed successfully! File saved to ${downloadLocation}`);
+                updateStatus(`Conversion completed successfully! ${format.toUpperCase()} file saved to ${downloadLocation}`);
                 setTimeout(resetUI, 3000);
             }
         }, 200);
