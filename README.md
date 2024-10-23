@@ -1,6 +1,6 @@
 # YouTube to MP3 Downloader
 
-[![yt-dlp](https://img.shields.io/badge/yt--dlp-2024.10.7-red.svg)](https://github.com/yt-dlp/yt-dlp/releases/tag/2024.10.7)
+[![yt-dlp](https://img.shields.io/badge/yt--dlp-2024.10.07-red.svg)](https://github.com/yt-dlp/yt-dlp/releases/tag/2024.10.07)
 
 This is a Python script with a web interface that allows you to download the audio from YouTube videos and save them as MP3 or WAV files.
 
@@ -31,7 +31,7 @@ This is a Python script with a web interface that allows you to download the aud
 ## Requirements
 
 - Python 3.6+
-- yt-dlp (version 2024.10.7)
+- yt-dlp (version 2024.10.07)
 - FFmpeg (required for audio conversion)
 - Modern web browser
 
