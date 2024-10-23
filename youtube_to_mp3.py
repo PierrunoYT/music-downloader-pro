@@ -30,13 +30,13 @@ def download_progress_hook(d):
     elif d['status'] == 'finished':
         print('\nDownload finished. Converting to MP3...')
 
-def download_youtube_audio(url, output_path='.'):
+def download_youtube_audio(url, output_path=None):
     """
     Download audio from a YouTube video and save it as an MP3 file.
 
     Args:
         url (str): The URL of the YouTube video.
-        output_path (str): The directory to save the downloaded audio. Defaults to the current directory.
+        output_path (str): The directory to save the downloaded audio. Defaults to 'downloads' folder.
 
     Returns:
         None
@@ -44,6 +44,14 @@ def download_youtube_audio(url, output_path='.'):
     if not is_valid_youtube_url(url):
         print("Error: Invalid YouTube URL")
         return
+
+    # Use downloads folder as default if no path specified
+    if output_path is None or not output_path.strip():
+        output_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'downloads')
+
+    # Create the output directory if it doesn't exist
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
 
     ydl_opts = {
         'format': 'bestaudio/best',
@@ -68,13 +76,7 @@ def main():
     Main function to run the YouTube to MP3 downloader.
     """
     url = input("Enter the YouTube URL you want to download: ")
-    output_path = input("Enter the output directory (press Enter for current directory): ").strip()
-    
-    if not output_path:
-        output_path = '.'
-    
-    if not os.path.exists(output_path):
-        os.makedirs(output_path)
+    output_path = input("Enter the output directory (press Enter for downloads folder): ").strip()
     
     download_youtube_audio(url, output_path)
 

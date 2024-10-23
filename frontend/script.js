@@ -52,7 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (progress >= 100) {
                 clearInterval(interval);
-                updateStatus('Conversion completed successfully!');
+                const downloadLocation = outputDir || 'downloads folder';
+                updateStatus(`Conversion completed successfully! File saved to ${downloadLocation}`);
                 setTimeout(resetUI, 3000);
             }
         }, 200);
@@ -66,4 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateProgress(0);
         }
     });
+
+    // Update output directory placeholder to show default
+    outputDirInput.placeholder = "Leave empty to use downloads folder";
 });
