@@ -2,12 +2,12 @@
 
 [![yt-dlp](https://img.shields.io/badge/yt--dlp-2024.10.7-red.svg)](https://github.com/yt-dlp/yt-dlp/releases/tag/2024.10.7)
 
-This is a Python script with a web interface that allows you to download the audio from YouTube videos and save them as MP3 files.
+This is a Python script with a web interface that allows you to download the audio from YouTube videos and save them as MP3 or WAV files.
 
 ## Features
 
 - Download audio from YouTube videos
-- Convert audio to MP3 format
+- Convert audio to MP3 or WAV format
 - User-friendly web interface
 - Command-line interface support
 - Progress bar for download status
@@ -15,11 +15,24 @@ This is a Python script with a web interface that allows you to download the aud
 - YouTube URL validation
 - Responsive design for mobile and desktop
 
+## Audio Format Support
+
+### MP3 Format
+- Default format for most use cases
+- Provides good compression while maintaining audio quality
+- Default quality setting of 192kbps
+
+### WAV Format
+- Uncompressed audio format
+- Larger file sizes compared to MP3
+- Useful for audio editing or high-quality archival
+- Note: Converting to WAV won't improve quality beyond the original source
+
 ## Requirements
 
 - Python 3.6+
 - yt-dlp (version 2024.10.7)
-- FFmpeg
+- FFmpeg (required for audio conversion)
 - Modern web browser
 
 ## Installation
@@ -43,8 +56,9 @@ This is a Python script with a web interface that allows you to download the aud
 
 1. Open the `frontend/index.html` file in your web browser
 2. Enter the YouTube URL in the input field
-3. Click the "Download" button
-4. The MP3 file will be downloaded to your specified directory
+3. Select your desired output format (MP3 or WAV)
+4. Click the "Download" button
+5. The audio file will be downloaded to your specified directory
 
 ### Command Line Interface
 
@@ -55,8 +69,18 @@ python youtube_to_mp3.py
 ```
 
 1. When prompted, enter the URL of the YouTube video you want to download.
-2. Enter the output directory where you want to save the MP3 file (press Enter to use the current directory).
-3. The script will download the audio, display the progress, and save it as an MP3 file in the specified directory.
+2. Enter the output directory where you want to save the audio file (press Enter to use the current directory).
+3. Choose the output format (mp3/wav)
+4. The script will download the audio, display the progress, and save it in the specified format.
+
+## Technical Details
+
+- The download process occurs in two steps:
+  1. Download the best available audio quality from YouTube
+  2. Convert to the selected format (MP3 or WAV)
+- YouTube's audio is typically in Opus or M4A format
+- Converting to WAV will not improve quality beyond the original source
+- WAV files are significantly larger than MP3 files due to being uncompressed
 
 ## Updating yt-dlp
 
