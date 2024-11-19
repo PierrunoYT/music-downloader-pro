@@ -5,6 +5,8 @@
 [![Flask](https://img.shields.io/badge/flask-%23000.svg?style=flat&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=flat&logo=YouTube&logoColor=white)](https://developers.google.com/youtube/v3)
 [![Spotify](https://img.shields.io/badge/Spotify-1ED760?style=flat&logo=spotify&logoColor=white)](https://developer.spotify.com/)
+[![FFmpeg](https://img.shields.io/badge/FFmpeg-007808?style=flat&logo=ffmpeg&logoColor=white)](https://ffmpeg.org/)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/PierrunoYT/music-downloader-pro/commits/master)
 
 A powerful Flask web application that converts both YouTube videos and Spotify tracks to MP3 format. Utilizing YouTube Data API, yt-dlp, and Spotify API for high-quality audio extraction.
 
@@ -25,6 +27,14 @@ A powerful Flask web application that converts both YouTube videos and Spotify t
 ## 🖼️ Preview
 
 Access the application through your web browser at `http://localhost:5000` after installation.
+
+The application features a clean, intuitive interface with:
+- Simple URL input field for both YouTube and Spotify links
+- Real-time progress tracking with visual feedback
+- Clear download status indicators
+- Responsive design that works on both desktop and mobile
+- Dark/light mode support
+- Easy-to-use playlist handling interface
 
 ## 🔧 Prerequisites
 
@@ -48,8 +58,8 @@ source venv/bin/activate
 
 2. Clone the repository:
 ```bash
-git clone https://github.com/PierrunoYT/youtube-to-mp3-converter.git
-cd youtube-to-mp3-converter
+git clone https://github.com/PierrunoYT/music-downloader-pro.git
+cd music-downloader-pro
 ```
 
 3. Install the required packages:
