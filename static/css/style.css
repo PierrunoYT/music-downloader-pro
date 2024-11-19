@@ -74,7 +74,9 @@ body {
     opacity: 1;
 }
 
-[data-theme="dark"] .text-muted {
+[data-theme="dark"] .text-muted,
+[data-theme="dark"] small,
+[data-theme="dark"] #statusText {
     color: #ffffff !important;
 }
 
