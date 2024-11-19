@@ -47,9 +47,14 @@ body {
 
 .form-control:focus {
     background-color: var(--input-bg);
-    color: var(--input-text);
+    color: var(--input-text) !important;
     border-color: #666666;
     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+}
+
+.form-control::placeholder {
+    color: var(--input-text);
+    opacity: 0.7;
 }
 
 .btn-outline-secondary {
