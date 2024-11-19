@@ -91,7 +91,8 @@ body {
 [data-theme="dark"] label,
 [data-theme="dark"] p,
 [data-theme="dark"] span,
-[data-theme="dark"] div:not(.progress-bar):not(.fa-spotify):not(.fa-youtube) {
+[data-theme="dark"] div:not(.progress-bar):not(.fa-spotify):not(.fa-youtube),
+[data-theme="dark"] .alert-link {
     color: var(--text-color) !important;
 }
 
