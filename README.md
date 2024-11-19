@@ -8,44 +8,48 @@
 [![FFmpeg](https://img.shields.io/badge/FFmpeg-007808?style=flat&logo=ffmpeg&logoColor=white)](https://ffmpeg.org/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/PierrunoYT/music-downloader-pro/commits/master)
 
-A powerful Flask web application that converts both YouTube videos and Spotify tracks to MP3 format. Utilizing YouTube Data API, yt-dlp, and Spotify API for high-quality audio extraction.
+A Flask web application that downloads audio from both YouTube videos and Spotify tracks. YouTube content is downloaded in high-quality Opus format using yt-dlp, while Spotify tracks are downloaded in M4A format using spotdl.
 
 ## 🎯 Features
 
-- 🎨 Clean, modern user interface
+- 🎨 Clean, simple web interface
 - 🎵 Support for both YouTube videos and Spotify tracks
 - 🎧 High-quality audio extraction
-- 🔄 Real-time conversion progress updates
+  - YouTube: Opus format (251/bestaudio)
+  - Spotify: M4A format (320k bitrate)
 - 🔒 Secure file downloads
 - ✅ Input validation and error handling
-- 🚀 Uses official YouTube Data API and Spotify API
+- 🚀 Uses official Spotify API for track information
 - 📁 Unique filename generation with timestamps
-- 📺 YouTube playlist support
-- 🎶 Spotify playlist support
-- 🏷️ Automatic metadata tagging
+- 🔍 Smart URL parsing for both platforms
 
 ## 🖼️ Preview
 
-Access the application through your web browser at `http://localhost:5000` after installation.
+Access the application through your web browser at `http://localhost:8000` after installation.
 
-The application features a clean, intuitive interface with:
-- Simple URL input field for both YouTube and Spotify links
-- Real-time progress tracking with visual feedback
-- Clear download status indicators
-- Responsive design that works on both desktop and mobile
-- Dark/light mode support
-- Easy-to-use playlist handling interface
+The application features a simple interface with:
+- URL input field for both YouTube and Spotify links
+- Clear success/error status messages
+- Direct download links for converted files
+- Support for both youtu.be and youtube.com URL formats
 
 ## 🔧 Prerequisites
 
 - Python 3.7+
-- YouTube Data API key
 - Spotify API credentials (Client ID and Secret)
 - FFmpeg (for audio conversion)
+- spotdl for Spotify downloads
+- yt-dlp for YouTube downloads
 
 ## 📦 Installation
 
-1. Create and activate a virtual environment:
+1. Clone the repository:
+```bash
+git clone https://github.com/PierrunoYT/music-downloader-pro.git
+cd music-downloader-pro
+```
+
+2. Create and activate a virtual environment:
 ```bash
 # Windows
 python -m venv venv
@@ -54,12 +58,6 @@ venv\Scripts\activate
 # Linux/macOS
 python3 -m venv venv
 source venv/bin/activate
-```
-
-2. Clone the repository:
-```bash
-git clone https://github.com/PierrunoYT/music-downloader-pro.git
-cd music-downloader-pro
 ```
 
 3. Install the required packages:
@@ -72,23 +70,14 @@ pip install -r requirements.txt
    - Linux: `sudo apt-get install ffmpeg`
    - macOS: `brew install ffmpeg`
 
-5. Set up YouTube Data API:
-   - Go to [Google Cloud Console](https://console.cloud.google.com/)
-   - Create a new project
-   - Enable the YouTube Data API v3
-   - Create credentials (API key)
-   - Set up API restrictions and quotas
-
-6. Set up Spotify API:
+5. Set up Spotify API:
    - Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
    - Create a new application
    - Get your Client ID and Client Secret
-   - Add `http://localhost:5000/callback` to your Redirect URIs
 
-7. Configure environment variables:
+6. Configure environment variables:
    Create a `.env` file in the project root with the following:
    ```
-   YOUTUBE_API_KEY=your_youtube_api_key
    SPOTIFY_CLIENT_ID=your_spotify_client_id
    SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
    ```
@@ -100,137 +89,97 @@ pip install -r requirements.txt
 python app.py
 ```
 
-2. Open your web browser and navigate to `http://localhost:5000`
+2. Open your web browser and navigate to `http://localhost:8000`
 
 3. Choose your source:
-   - For YouTube: Paste a YouTube URL (video or playlist)
-   - For Spotify: Paste a Spotify track or playlist URL
+   - For YouTube: Paste a YouTube video URL
+   - For Spotify: Paste a Spotify track URL
 
 4. Click "Convert" and wait for the process to complete
 
-5. Download your converted MP3 file(s)
+5. Click the download link to get your converted audio file
 
 ## 📺 YouTube Features
 
-- **Video Download**: Convert individual YouTube videos to MP3
-- **Playlist Support**: Download entire YouTube playlists
-- **Quality Options**: Choose between different audio quality settings
-  - High Quality (256kbps)
-  - Standard Quality (128kbps)
-  - Custom Quality Settings
-- **Format Selection**: Automatically selects the best audio format
+- **Video Download**: Convert individual YouTube videos to Opus format
+- **Format Selection**: Automatically selects the best audio quality (format 251)
+- **URL Support**:
+  - Standard youtube.com URLs
+  - Short youtu.be URLs
 - **Metadata Extraction**:
-  - Video title as track name
-  - Channel name as artist
-  - Upload date
+  - Video title
   - Description
-  - Thumbnails
-- **Advanced Features**:
-  - Timestamp support for partial downloads
-  - Automatic chapter detection
-  - Custom filename templates
-  - Batch processing for playlists
-  - Progress tracking for long videos
-  - Resume interrupted downloads
+- **Safe File Handling**:
+  - Unique filename generation
+  - Timestamp-based naming
+  - Filename sanitization
 
 ## 🎵 Spotify Features
 
-- **Track Download**: Convert individual Spotify tracks to MP3
-- **Playlist Support**: Download entire Spotify playlists
-- **Metadata Preservation**: Maintains artist, album, and track information
-- **Album Artwork**: Automatically embeds album covers
-- **Smart Search**: Finds the best matching audio source for Spotify tracks
-- **Batch Processing**: Efficiently handles multiple tracks from playlists
-- **Advanced Features**:
-  - Album support
-  - Artist discography download
-  - Playlist folder organization
-  - Custom metadata templates
-  - Regional availability check
+- **Track Download**: Convert individual Spotify tracks to M4A format
+- **High Quality**: 320kbps bitrate audio
+- **Metadata Preservation**:
+  - Track title
+  - Artist name
+- **Safe File Handling**:
+  - Temporary directory usage
+  - Automatic cleanup
+  - Unique filename generation
 
 ## 🔧 Technical Details
 
 - Flask web framework for the backend
-- YouTube Data API v3 for video information
 - yt-dlp for YouTube video downloading
-- Spotify Web API for track and playlist information
 - spotdl for Spotify track downloading
-- FFmpeg for audio extraction and conversion
-- Bootstrap 5 for responsive design
-- Font Awesome for icons
-- Real-time progress updates using WebSocket
-- Efficient caching system
-- Rate limiting implementation
-- Queue management for batch processing
+- Spotipy for Spotify API integration
+- FFmpeg for audio processing
+- Logging system for debugging
+- Error handling and input validation
+- Secure file operations
+- Clean project structure:
+  - `app.py`: Main Flask application
+  - `spotify_utils.py`: Spotify-related functionality
+  - `youtube_utils.py`: YouTube-related functionality
+  - `url_utils.py`: URL parsing and validation
+  - `file_utils.py`: File operations and safety
 
 ## ⚠️ Error Handling
 
-The application includes comprehensive error handling for:
+The application includes error handling for:
 - Invalid YouTube/Spotify URLs
-- Private or unavailable videos/tracks
-- API quota exceeded
-- Invalid API credentials
-- Network issues
+- Missing or invalid API credentials
+- Download failures
 - File system errors
-- Spotify authentication issues
-- Geoblocked content
-- Rate limiting
-- Corrupted downloads
-- Insufficient disk space
+- Network issues
+- Invalid input validation
 
 ## 🔒 Security Features
 
 - Input validation and sanitization
 - Safe file handling with unique filenames
-- Secure downloads
+- Secure downloads with proper MIME types
 - Environment variable configuration
-- No temporary file exposure
-- Secure Spotify OAuth implementation
-- Rate limiting
-- Request validation
-- XSS protection
-- CSRF protection
+- Temporary file cleanup
+- Sanitized file paths
 
 ## 🔍 Troubleshooting
 
 Common issues and solutions:
 
-1. **FFmpeg not found**
-   - Ensure FFmpeg is properly installed and added to your system's PATH
-   - Try running `ffmpeg -version` in your terminal to verify the installation
-   - Check FFmpeg codecs support
+1. **Spotify API Issues**
+   - Verify your Client ID and Secret in `.env`
+   - Ensure the Spotify API credentials are valid
+   - Check if the track is available in your region
 
-2. **YouTube API Issues**
-   - Verify your API key is correctly set in the `.env` file
-   - Check if you've enabled the YouTube Data API v3
-   - Monitor your API quota usage
-   - Ensure proper API restrictions are set
-   - Check for regional restrictions
-
-3. **Spotify Authentication Issues**
-   - Verify your Spotify Client ID and Secret
-   - Check if the redirect URI is properly configured
-   - Ensure your Spotify application is properly set up
-   - Verify token refresh mechanism
-
-4. **Download Issues**
+2. **YouTube Download Issues**
+   - Ensure you're using a valid video URL
    - Check your internet connection
-   - Verify the content is available in your region
-   - Ensure you have sufficient disk space
-   - Check if the content is age-restricted
-   - Verify file permissions
-   - Check for rate limiting
+   - Verify FFmpeg is properly installed
 
-## 👥 Contributing
-
-Contributions are welcome! Here's how you can help:
-
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature/improvement`)
-3. Make your changes
-4. Commit your changes (`git commit -am 'Add new feature'`)
-5. Push to the branch (`git push origin feature/improvement`)
-6. Create a Pull Request
+3. **File Download Issues**
+   - Ensure the downloads directory exists
+   - Check file permissions
+   - Verify disk space availability
 
 ## 📄 License
 
