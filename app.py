@@ -32,6 +32,19 @@ spotify_api = SpotifyAPI(SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET)
 def index():
     return render_template('index.html')
 
+@app.route('/search')
+def search():
+    query = request.args.get('q')
+    if not query:
+        return []
+        
+    try:
+        tracks = spotify_api.search_track(query)
+        return tracks
+    except Exception as e:
+        logger.error(f"Search error: {str(e)}")
+        return [], 500
+
 @app.route('/', methods=['POST'])
 def convert():
     try:

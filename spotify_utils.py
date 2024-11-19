@@ -40,6 +40,28 @@ class SpotifyAPI:
             logger.error(f"Failed to get track info: {str(e)}")
             raise ValueError(f"Spotify API error: {str(e)}")
             
+    def search_track(self, query):
+        """Search for a track using Spotify API."""
+        if not self.spotify:
+            raise ValueError("Spotify API credentials not configured")
+            
+        try:
+            results = self.spotify.search(q=query, type='track', limit=5)
+            tracks = []
+            
+            for track in results['tracks']['items']:
+                tracks.append({
+                    'id': track['id'],
+                    'title': track['name'],
+                    'artist': track['artists'][0]['name'],
+                    'url': track['external_urls']['spotify']
+                })
+            
+            return tracks
+        except Exception as e:
+            logger.error(f"Failed to search tracks: {str(e)}")
+            raise ValueError(f"Spotify API error: {str(e)}")
+            
     def get_playlist_info(self, playlist_id):
         """Get playlist information using Spotify API."""
         if not self.spotify:

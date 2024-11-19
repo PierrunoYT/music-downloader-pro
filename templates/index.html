@@ -49,22 +49,53 @@
 
                         <form id="convertForm" method="POST" class="mb-4">
                             <div class="mb-3">
-                                <label for="url" class="form-label">
-                                    <i class="fas fa-link me-1"></i>
-                                    Enter URL
-                                </label>
-                                <div class="input-group">
-                                    <input type="url" class="form-control" id="url" name="url" 
-                                           pattern="^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|open\.spotify\.com\/.*track\/).+" 
-                                           placeholder="YouTube or Spotify track URL..." required>
-                                    <button type="submit" class="btn btn-primary" id="submitBtn">
-                                        <i class="fas fa-download me-1"></i>
-                                        Download
-                                    </button>
-                                </div>
-                                <div class="form-text text-muted">
-                                    <i class="fas fa-info-circle me-1"></i>
-                                    Paste a YouTube/Spotify video, track, or playlist URL
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#url-tab" type="button">URL</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#search-tab" type="button">Search</button>
+                                    </li>
+                                </ul>
+                                
+                                <div class="tab-content mt-3">
+                                    <div class="tab-pane fade show active" id="url-tab">
+                                        <label for="url" class="form-label">
+                                            <i class="fas fa-link me-1"></i>
+                                            Enter URL
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="url" class="form-control" id="url" name="url" 
+                                                   pattern="^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|open\.spotify\.com\/.*track\/).+" 
+                                                   placeholder="YouTube or Spotify track URL...">
+                                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                                <i class="fas fa-download me-1"></i>
+                                                Download
+                                            </button>
+                                        </div>
+                                        <div class="form-text text-muted">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            Paste a YouTube/Spotify video, track, or playlist URL
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="tab-pane fade" id="search-tab">
+                                        <label for="search" class="form-label">
+                                            <i class="fas fa-search me-1"></i>
+                                            Search Song
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="search" name="search" 
+                                                   placeholder="Enter song name...">
+                                            <button type="button" class="btn btn-primary" id="searchBtn">
+                                                <i class="fas fa-search me-1"></i>
+                                                Search
+                                            </button>
+                                        </div>
+                                        <div id="searchResults" class="list-group mt-3">
+                                            <!-- Search results will be inserted here -->
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -95,6 +126,53 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Search functionality
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            const query = document.getElementById('search').value;
+            if (!query) return;
+            
+            const searchResults = document.getElementById('searchResults');
+            searchResults.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Searching...</div>';
+            
+            fetch('/search?q=' + encodeURIComponent(query))
+                .then(response => response.json())
+                .then(data => {
+                    searchResults.innerHTML = '';
+                    if (data.length === 0) {
+                        searchResults.innerHTML = '<div class="text-center text-muted">No results found</div>';
+                        return;
+                    }
+                    
+                    data.forEach(track => {
+                        const button = document.createElement('button');
+                        button.className = 'list-group-item list-group-item-action';
+                        button.innerHTML = `
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">${track.title}</h6>
+                                    <small class="text-muted">${track.artist}</small>
+                                </div>
+                                <button class="btn btn-sm btn-primary download-btn" data-url="${track.url}">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        `;
+                        
+                        button.querySelector('.download-btn').addEventListener('click', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            document.getElementById('url').value = this.dataset.url;
+                            document.getElementById('convertForm').submit();
+                        });
+                        
+                        searchResults.appendChild(button);
+                    });
+                })
+                .catch(error => {
+                    searchResults.innerHTML = '<div class="alert alert-danger">Error performing search</div>';
+                });
+        });
+
         // Theme handling
         function setTheme(theme) {
             document.documentElement.setAttribute('data-theme', theme);
