@@ -74,10 +74,20 @@ body {
     opacity: 1;
 }
 
+[data-theme="dark"] {
+    --text-color: #ffffff;
+}
+
 [data-theme="dark"] .text-muted,
 [data-theme="dark"] small,
-[data-theme="dark"] #statusText {
-    color: #ffffff !important;
+[data-theme="dark"] #statusText,
+[data-theme="dark"] .form-label,
+[data-theme="dark"] .form-text,
+[data-theme="dark"] label,
+[data-theme="dark"] p,
+[data-theme="dark"] span,
+[data-theme="dark"] div:not(.progress-bar):not(.fa-spotify):not(.fa-youtube) {
+    color: var(--text-color) !important;
 }
 
 [data-theme="dark"] .alert {
