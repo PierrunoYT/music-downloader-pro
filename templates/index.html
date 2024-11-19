@@ -161,8 +161,76 @@
                         button.querySelector('.download-btn').addEventListener('click', function(e) {
                             e.preventDefault();
                             e.stopPropagation();
+                            
+                            // Show progress UI
+                            const progressContainer = document.getElementById('progressContainer');
+                            const progressBar = document.getElementById('progressBar');
+                            const statusText = document.getElementById('statusText');
+                            const alertContainer = document.getElementById('alertContainer');
+                            
+                            progressContainer.classList.remove('d-none');
+                            progressBar.style.width = '0%';
+                            progressBar.classList.remove('bg-danger');
+                            progressBar.classList.add('progress-bar-animated');
+                            alertContainer.innerHTML = '';
+                            
+                            // Update status messages
+                            const stages = [
+                                { progress: 20, message: 'Fetching track information...' },
+                                { progress: 40, message: 'Preparing download...' },
+                                { progress: 60, message: 'Downloading audio...' },
+                                { progress: 80, message: 'Converting to MP3...' },
+                                { progress: 95, message: 'Finalizing...' }
+                            ];
+                            
+                            let currentStage = 0;
+                            const interval = setInterval(() => {
+                                if (currentStage < stages.length) {
+                                    updateProgress(
+                                        stages[currentStage].progress,
+                                        stages[currentStage].message
+                                    );
+                                    currentStage++;
+                                }
+                            }, 1500);
+                            
+                            // Submit form
                             document.getElementById('url').value = this.dataset.url;
-                            document.getElementById('convertForm').submit();
+                            const form = document.getElementById('convertForm');
+                            
+                            fetch(form.action, {
+                                method: 'POST',
+                                body: new FormData(form)
+                            })
+                            .then(response => response.text())
+                            .then(html => {
+                                clearInterval(interval);
+                                updateProgress(100, 'Completed!');
+                                
+                                // Parse the response HTML
+                                const parser = new DOMParser();
+                                const doc = parser.parseFromString(html, 'text/html');
+                                
+                                // Check for success or error messages
+                                const successAlert = doc.querySelector('.alert-success');
+                                const errorAlert = doc.querySelector('.alert-danger');
+                                
+                                if (successAlert) {
+                                    showAlert(successAlert.innerHTML, 'success');
+                                } else if (errorAlert) {
+                                    showAlert(errorAlert.textContent, 'danger');
+                                }
+                                
+                                setTimeout(() => {
+                                    progressContainer.classList.add('d-none');
+                                }, 1000);
+                            })
+                            .catch(error => {
+                                clearInterval(interval);
+                                showAlert('An error occurred while processing your request. Please try again.', 'danger');
+                                progressBar.classList.remove('progress-bar-animated');
+                                progressBar.classList.add('bg-danger');
+                            });
                         });
                         
                         searchResults.appendChild(button);
