@@ -8,21 +8,25 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #f8f9fa;
-            --text-color: #212529;
-            --card-bg: #fff;
-            --input-bg: #fff;
-            --input-text: #212529;
-            --border-color: rgba(0,0,0,.125);
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --card-bg: #ffffff;
+            --input-bg: #ffffff;
+            --input-text: #333333;
+            --border-color: #dee2e6;
+            --btn-border: #6c757d;
+            --alert-bg: #ffffff;
         }
 
         [data-theme="dark"] {
-            --bg-color: #212529;
-            --text-color: #f8f9fa;
-            --card-bg: #343a40;
-            --input-bg: #495057;
-            --input-text: #f8f9fa;
-            --border-color: rgba(255,255,255,.125);
+            --bg-color: #1a1a1a;
+            --text-color: #e1e1e1;
+            --card-bg: #2d2d2d;
+            --input-bg: #3d3d3d;
+            --input-text: #e1e1e1;
+            --border-color: #404040;
+            --btn-border: #666666;
+            --alert-bg: #2d2d2d;
         }
 
         body {
@@ -40,6 +44,35 @@
             background-color: var(--input-bg);
             color: var(--input-text);
             border-color: var(--border-color);
+        }
+
+        .form-control:focus {
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            border-color: #666666;
+            box-shadow: 0 0 0 0.2rem rgba(130, 138, 145, 0.25);
+        }
+
+        .btn-outline-secondary {
+            color: var(--text-color);
+            border-color: var(--btn-border);
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            border-color: var(--btn-border);
+        }
+
+        .alert {
+            background-color: var(--alert-bg);
+            border-color: var(--border-color);
+            color: var(--text-color);
+        }
+
+        .form-text {
+            color: var(--text-color) !important;
+            opacity: 0.8;
         }
 
         .form-control:focus {
