@@ -8,15 +8,15 @@
 [![FFmpeg](https://img.shields.io/badge/FFmpeg-007808?style=flat&logo=ffmpeg&logoColor=white)](https://ffmpeg.org/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/PierrunoYT/music-downloader-pro/commits/master)
 
-A Flask web application that downloads audio from both YouTube videos and Spotify tracks. YouTube content is downloaded in high-quality Opus format using yt-dlp, while Spotify tracks are downloaded in M4A format using spotdl.
+A Flask web application that downloads audio from both YouTube videos and Spotify tracks. YouTube content is downloaded in its original WebM/Opus format using yt-dlp, while Spotify tracks are downloaded in their original OGG format using spotdl.
 
 ## 🎯 Features
 
 - 🎨 Clean, simple web interface
 - 🎵 Support for both YouTube videos and Spotify tracks
-- 🎧 High-quality audio extraction
-  - YouTube: Opus format (251/bestaudio)
-  - Spotify: M4A format (320k bitrate)
+- 🎧 Raw audio downloads
+  - YouTube: Original WebM/Opus format (bestaudio)
+  - Spotify: Original OGG format
 - 🔒 Secure file downloads
 - ✅ Input validation and error handling
 - 🚀 Uses official Spotify API and yt-dlp for downloads
@@ -102,7 +102,7 @@ python app.py
 ## 📺 YouTube Features
 
 - **Video Download**: Convert individual YouTube videos to Opus format
-- **Format Selection**: Automatically selects the best audio quality (format 251)
+- **Format Selection**: Downloads original audio format (usually WebM/Opus)
 - **URL Support**:
   - Standard youtube.com URLs
   - Short youtu.be URLs
@@ -116,8 +116,8 @@ python app.py
 
 ## 🎵 Spotify Features
 
-- **Track Download**: Convert individual Spotify tracks to M4A format
-- **High Quality**: 320kbps bitrate audio
+- **Track Download**: Download individual Spotify tracks in original OGG format
+- **Original Quality**: Maintains source audio quality
 - **Metadata Preservation**:
   - Track title
   - Artist name
