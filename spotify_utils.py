@@ -55,8 +55,8 @@ def download_spotify_track(track_url, output_path, client_id, client_secret):
                 '--client-id', client_id,
                 '--client-secret', client_secret,
                 '--output', temp_dir,
-                '--format', 'm4a',
-                '--bitrate', '320k',
+                '--format', 'ogg',  # Original Spotify format
+                '--no-convert',  # Skip conversion
                 track_url
             ]
             

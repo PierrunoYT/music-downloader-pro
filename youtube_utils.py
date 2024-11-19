@@ -22,19 +22,14 @@ def get_video_info(video_url):
         raise ValueError(f"Failed to get video info: {str(e)}")
 
 def download_audio(video_url, output_path):
-    """Download audio using yt-dlp with MP3 format."""
-    output_path = os.path.splitext(output_path)[0] + '.mp3'
+    """Download raw audio using yt-dlp."""
+    output_path = os.path.splitext(output_path)[0] + '.webm'
     
     ydl_opts = {
         'format': 'bestaudio/best',
         'outtmpl': output_path,
         'quiet': True,
         'no_warnings': True,
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': '320',
-        }],
     }
     
     try:

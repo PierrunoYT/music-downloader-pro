@@ -55,7 +55,7 @@ def convert():
             # Generate filename from title
             title = f"{track_info['artist']} - {track_info['title']}"
             safe_title = sanitize_filename(title)
-            unique_filename = f"{safe_title}.m4a"
+            unique_filename = f"{safe_title}.ogg"
             output_path = os.path.join(DOWNLOADS_DIR, unique_filename)
             
             # Download track
@@ -73,7 +73,7 @@ def convert():
             # Generate filename from title
             title = video_info['title']
             safe_title = sanitize_filename(title)
-            unique_filename = f"{safe_title}.mp3"
+            unique_filename = f"{safe_title}.webm"
             output_path = os.path.join(DOWNLOADS_DIR, unique_filename)
             
             # Download audio
@@ -106,7 +106,12 @@ def download(filename):
             return "File not found", 404
         
         # Set correct MIME type based on file extension
-        mime_type = 'audio/mpeg' if filename.endswith('.mp3') else 'audio/mp4'
+        if filename.endswith('.webm'):
+            mime_type = 'audio/webm'
+        elif filename.endswith('.ogg'):
+            mime_type = 'audio/ogg'
+        else:
+            mime_type = 'application/octet-stream'
             
         return send_file(
             file_path,
