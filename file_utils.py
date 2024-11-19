@@ -4,10 +4,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def generate_unique_filename(original_filename, extension):
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    base = os.path.splitext(original_filename)[0]
-    return f"{base}_{timestamp}{extension}"
 
 def ensure_downloads_dir(base_dir):
     """Ensure downloads directory exists and return its path."""

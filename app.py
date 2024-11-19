@@ -52,10 +52,10 @@ def convert():
             # Get track information
             track_info = spotify_api.get_track_info(track_id)
             
-            # Generate safe filename
+            # Generate filename from title
             title = f"{track_info['artist']} - {track_info['title']}"
             safe_title = sanitize_filename(title)
-            unique_filename = generate_unique_filename(safe_title, '.m4a')
+            unique_filename = f"{safe_title}.m4a"
             output_path = os.path.join(DOWNLOADS_DIR, unique_filename)
             
             # Download track
@@ -70,10 +70,10 @@ def convert():
             # Get video information
             video_info = get_video_info(url)
             
-            # Generate safe filename
+            # Generate filename from title
             title = video_info['title']
             safe_title = sanitize_filename(title)
-            unique_filename = generate_unique_filename(safe_title, '.mp3')
+            unique_filename = f"{safe_title}.mp3"
             output_path = os.path.join(DOWNLOADS_DIR, unique_filename)
             
             # Download audio
