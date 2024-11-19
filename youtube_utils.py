@@ -26,13 +26,15 @@ def download_audio(video_url, output_path):
     output_path = os.path.splitext(output_path)[0] + '.mp3'
     
     ydl_opts = {
-        'format': 'bestaudio[ext=mp3]/bestaudio/best',
+        'format': 'bestaudio/best',
         'outtmpl': output_path,
         'quiet': True,
         'no_warnings': True,
-        'extract_audio': True,
-        'audio_format': 'mp3',
-        'audio_quality': '0'  # Best quality
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '320',
+        }],
     }
     
     try:
