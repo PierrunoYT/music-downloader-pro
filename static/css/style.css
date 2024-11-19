@@ -131,6 +131,27 @@ body {
     transform: translateY(-1px);
 }
 
+.nav-tabs {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.nav-tabs .nav-link {
+    color: var(--text-color);
+    border: 1px solid transparent;
+    margin-bottom: -1px;
+}
+
+.nav-tabs .nav-link:hover {
+    border-color: var(--border-color) var(--border-color) transparent;
+    isolation: isolate;
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--text-color);
+    background-color: var(--card-bg);
+    border-color: var(--border-color) var(--border-color) transparent;
+}
+
 .platform-icon {
     font-size: 1.5em;
     margin-right: 0.5em;
