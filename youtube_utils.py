@@ -1,0 +1,39 @@
+import yt_dlp
+import logging
+import os
+
+logger = logging.getLogger(__name__)
+
+def get_video_info(video_url):
+    """Get video information using yt-dlp."""
+    ydl_opts = {
+        'quiet': True,
+        'no_warnings': True
+    }
+    
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(video_url, download=False)
+            return {
+                'title': info.get('title', ''),
+                'description': info.get('description', '')
+            }
+    except Exception as e:
+        raise ValueError(f"Failed to get video info: {str(e)}")
+
+def download_audio(video_url, output_path):
+    """Download audio using yt-dlp with Opus format."""
+    output_path = os.path.splitext(output_path)[0] + '.opus'
+    
+    ydl_opts = {
+        'format': '251/bestaudio/best',  # Format 251 is Opus
+        'outtmpl': output_path,
+        'quiet': True,
+        'no_warnings': True
+    }
+    
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([video_url])
+    except Exception as e:
+        raise ValueError(f"Download failed: {str(e)}")
