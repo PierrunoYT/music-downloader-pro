@@ -5,18 +5,26 @@ import logging
 logger = logging.getLogger(__name__)
 
 def extract_video_id(url):
-    """Extract the video ID from a YouTube URL."""
+    """Extract the video ID or playlist ID from a YouTube URL."""
     if not url:
         return None
         
+    parsed_url = urlparse(url)
+    query_params = parse_qs(parsed_url.query)
+    
+    # Handle playlist URLs
+    if 'list' in query_params:
+        return {'type': 'playlist', 'id': query_params['list'][0]}
+        
     # Handle youtu.be URLs
-    if 'youtu.be' in url:
-        return url.split('/')[-1]
+    if 'youtu.be' in parsed_url.netloc:
+        return {'type': 'video', 'id': url.split('/')[-1]}
         
     # Handle youtube.com URLs
-    parsed_url = urlparse(url)
     if 'youtube.com' in parsed_url.netloc:
-        return parse_qs(parsed_url.query).get('v', [None])[0]
+        video_id = query_params.get('v', [None])[0]
+        if video_id:
+            return {'type': 'video', 'id': video_id}
         
     return None
 

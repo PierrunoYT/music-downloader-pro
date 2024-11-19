@@ -5,7 +5,7 @@ import os
 logger = logging.getLogger(__name__)
 
 def get_video_info(video_url):
-    """Get video information using yt-dlp."""
+    """Get video or playlist information using yt-dlp."""
     ydl_opts = {
         'quiet': True,
         'no_warnings': True
@@ -14,10 +14,22 @@ def get_video_info(video_url):
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(video_url, download=False)
-            return {
-                'title': info.get('title', ''),
-                'description': info.get('description', '')
-            }
+            
+            if 'entries' in info:  # It's a playlist
+                return {
+                    'type': 'playlist',
+                    'title': info.get('title', ''),
+                    'entries': [
+                        {'title': entry.get('title', '')}
+                        for entry in info['entries']
+                    ]
+                }
+            else:  # It's a single video
+                return {
+                    'type': 'video',
+                    'title': info.get('title', ''),
+                    'description': info.get('description', '')
+                }
     except Exception as e:
         raise ValueError(f"Failed to get video info: {str(e)}")
 

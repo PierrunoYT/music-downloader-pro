@@ -63,21 +63,44 @@ def convert():
             
         else:
             # Handle as YouTube URL
-            video_id = extract_video_id(url)
-            if not video_id:
+            url_info = extract_video_id(url)
+            if not url_info:
                 raise ValueError("Invalid YouTube URL")
             
-            # Get video information
-            video_info = get_video_info(url)
+            # Get video/playlist information
+            info = get_video_info(url)
             
-            # Generate filename from title
-            title = video_info['title']
-            safe_title = sanitize_filename(title)
-            unique_filename = f"{safe_title}.webm"
-            output_path = os.path.join(DOWNLOADS_DIR, unique_filename)
-            
-            # Download audio
-            download_audio(url, output_path)
+            if info['type'] == 'playlist':
+                # Create playlist directory
+                playlist_dir = os.path.join(DOWNLOADS_DIR, sanitize_filename(info['title']))
+                os.makedirs(playlist_dir, exist_ok=True)
+                
+                # Download each video in playlist
+                for entry in info['entries']:
+                    safe_title = sanitize_filename(entry['title'])
+                    output_path = os.path.join(playlist_dir, f"{safe_title}.webm")
+                    download_audio(url, output_path)
+                
+                # Create zip file of playlist
+                zip_filename = f"{sanitize_filename(info['title'])}.zip"
+                zip_path = os.path.join(DOWNLOADS_DIR, zip_filename)
+                
+                import shutil
+                shutil.make_archive(os.path.splitext(zip_path)[0], 'zip', playlist_dir)
+                
+                # Clean up playlist directory
+                shutil.rmtree(playlist_dir)
+                
+                unique_filename = zip_filename
+                title = info['title']
+                
+            else:
+                # Single video download
+                title = info['title']
+                safe_title = sanitize_filename(title)
+                unique_filename = f"{safe_title}.webm"
+                output_path = os.path.join(DOWNLOADS_DIR, unique_filename)
+                download_audio(url, output_path)
         
         return render_template(
             'index.html',
