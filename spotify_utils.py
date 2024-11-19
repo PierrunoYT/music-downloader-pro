@@ -39,6 +39,35 @@ class SpotifyAPI:
         except Exception as e:
             logger.error(f"Failed to get track info: {str(e)}")
             raise ValueError(f"Spotify API error: {str(e)}")
+            
+    def get_playlist_info(self, playlist_id):
+        """Get playlist information using Spotify API."""
+        if not self.spotify:
+            raise ValueError("Spotify API credentials not configured")
+        
+        try:
+            playlist = self.spotify.playlist(playlist_id)
+            tracks = []
+            
+            # Get all tracks from playlist
+            results = playlist['tracks']
+            while results:
+                for item in results['items']:
+                    if item['track']:
+                        tracks.append({
+                            'title': item['track']['name'],
+                            'artist': item['track']['artists'][0]['name']
+                        })
+                results = self.spotify.next(results) if results['next'] else None
+            
+            return {
+                'type': 'playlist',
+                'title': playlist['name'],
+                'tracks': tracks
+            }
+        except Exception as e:
+            logger.error(f"Failed to get playlist info: {str(e)}")
+            raise ValueError(f"Spotify API error: {str(e)}")
 
 def download_spotify_track(track_url, output_path, client_id, client_secret):
     """Download Spotify track using spotdl CLI with high quality M4A."""

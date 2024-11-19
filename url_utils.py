@@ -29,22 +29,29 @@ def extract_video_id(url):
     return None
 
 def is_spotify_url(url):
-    """Check if the URL is a Spotify track URL."""
+    """Check if the URL is a Spotify track or playlist URL."""
     parsed_url = urlparse(url)
-    return 'spotify.com' in parsed_url.netloc and '/track/' in parsed_url.path
+    return 'spotify.com' in parsed_url.netloc and ('/track/' in parsed_url.path or '/playlist/' in parsed_url.path)
 
-def extract_spotify_track_id(url):
-    """Extract track ID from Spotify URL."""
+def extract_spotify_id(url):
+    """Extract track or playlist ID from Spotify URL."""
     if not url:
         return None
     
-    match = re.search(r'/track/([a-zA-Z0-9]+)(?:\?|/|$)', url)
-    if not match:
-        return None
-
-    track_id = match.group(1)
-    if '?' in track_id:
-        track_id = track_id.split('?')[0]
+    # Check for playlist
+    playlist_match = re.search(r'/playlist/([a-zA-Z0-9]+)(?:\?|/|$)', url)
+    if playlist_match:
+        playlist_id = playlist_match.group(1)
+        if '?' in playlist_id:
+            playlist_id = playlist_id.split('?')[0]
+        return {'type': 'playlist', 'id': playlist_id}
     
-    logger.debug(f"Extracted track ID: {track_id} from URL: {url}")
-    return track_id
+    # Check for track
+    track_match = re.search(r'/track/([a-zA-Z0-9]+)(?:\?|/|$)', url)
+    if track_match:
+        track_id = track_match.group(1)
+        if '?' in track_id:
+            track_id = track_id.split('?')[0]
+        return {'type': 'track', 'id': track_id}
+    
+    return None

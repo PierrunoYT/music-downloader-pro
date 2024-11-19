@@ -44,22 +44,53 @@ def convert():
             if not spotify_api.spotify:
                 raise ValueError("Spotify downloads are not configured")
             
-            # Extract track ID and validate
-            track_id = extract_spotify_track_id(url)
-            if not track_id:
-                raise ValueError("Invalid Spotify track URL")
+            # Extract ID and validate
+            spotify_info = extract_spotify_id(url)
+            if not spotify_info:
+                raise ValueError("Invalid Spotify URL")
             
-            # Get track information
-            track_info = spotify_api.get_track_info(track_id)
-            
-            # Generate filename from title
-            title = f"{track_info['artist']} - {track_info['title']}"
-            safe_title = sanitize_filename(title)
-            unique_filename = f"{safe_title}.ogg"
-            output_path = os.path.join(DOWNLOADS_DIR, unique_filename)
-            
-            # Download track
-            download_spotify_track(url, output_path, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET)
+            if spotify_info['type'] == 'playlist':
+                # Get playlist information
+                playlist_info = spotify_api.get_playlist_info(spotify_info['id'])
+                
+                # Create playlist directory
+                playlist_dir = os.path.join(DOWNLOADS_DIR, sanitize_filename(playlist_info['title']))
+                os.makedirs(playlist_dir, exist_ok=True)
+                
+                # Download each track in playlist
+                for track in playlist_info['tracks']:
+                    safe_title = sanitize_filename(f"{track['artist']} - {track['title']}")
+                    output_path = os.path.join(playlist_dir, f"{safe_title}.ogg")
+                    
+                    # Construct track URL
+                    track_url = f"spotify:track:{track['id']}"
+                    download_spotify_track(track_url, output_path, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET)
+                
+                # Create zip file of playlist
+                zip_filename = f"{sanitize_filename(playlist_info['title'])}.zip"
+                zip_path = os.path.join(DOWNLOADS_DIR, zip_filename)
+                
+                import shutil
+                shutil.make_archive(os.path.splitext(zip_path)[0], 'zip', playlist_dir)
+                
+                # Clean up playlist directory
+                shutil.rmtree(playlist_dir)
+                
+                unique_filename = zip_filename
+                title = playlist_info['title']
+                
+            else:  # Single track
+                # Get track information
+                track_info = spotify_api.get_track_info(spotify_info['id'])
+                
+                # Generate filename from title
+                title = f"{track_info['artist']} - {track_info['title']}"
+                safe_title = sanitize_filename(title)
+                unique_filename = f"{safe_title}.ogg"
+                output_path = os.path.join(DOWNLOADS_DIR, unique_filename)
+                
+                # Download track
+                download_spotify_track(url, output_path, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET)
             
         else:
             # Handle as YouTube URL
