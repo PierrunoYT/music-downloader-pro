@@ -92,8 +92,19 @@ body {
 [data-theme="dark"] p,
 [data-theme="dark"] span,
 [data-theme="dark"] div:not(.progress-bar):not(.fa-spotify):not(.fa-youtube),
-[data-theme="dark"] .alert-link {
+[data-theme="dark"] .alert-link,
+[data-theme="dark"] .list-group-item h6,
+[data-theme="dark"] .list-group-item small {
     color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .list-group-item {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .list-group-item:hover {
+    background-color: var(--input-bg);
 }
 
 [data-theme="dark"] .alert {
