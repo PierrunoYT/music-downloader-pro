@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 import logging
 from url_utils import extract_video_id, is_spotify_url, extract_spotify_track_id
-from file_utils import generate_unique_filename, ensure_downloads_dir, sanitize_filename
+from file_utils import ensure_downloads_dir, sanitize_filename
 from youtube_utils import download_audio, get_video_info
 from spotify_utils import SpotifyAPI, download_spotify_track
 
