@@ -22,11 +22,16 @@ def get_video_info(video_url):
         raise ValueError(f"Failed to get video info: {str(e)}")
 
 def download_audio(video_url, output_path):
-    """Download audio using yt-dlp with Opus format."""
-    output_path = os.path.splitext(output_path)[0] + '.opus'
+    """Download audio using yt-dlp with MP3 format."""
+    output_path = os.path.splitext(output_path)[0] + '.mp3'
     
     ydl_opts = {
-        'format': '251/bestaudio/best',  # Format 251 is Opus
+        'format': 'bestaudio/best',
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '320',
+        }],
         'outtmpl': output_path,
         'quiet': True,
         'no_warnings': True

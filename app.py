@@ -73,7 +73,7 @@ def convert():
             # Generate safe filename
             title = video_info['title']
             safe_title = sanitize_filename(title)
-            unique_filename = generate_unique_filename(safe_title, '.opus')
+            unique_filename = generate_unique_filename(safe_title, '.mp3')
             output_path = os.path.join(DOWNLOADS_DIR, unique_filename)
             
             # Download audio
@@ -106,7 +106,7 @@ def download(filename):
             return "File not found", 404
         
         # Set correct MIME type based on file extension
-        mime_type = 'audio/ogg' if filename.endswith('.opus') else 'audio/mp4'
+        mime_type = 'audio/mpeg' if filename.endswith('.mp3') else 'audio/mp4'
             
         return send_file(
             file_path,
