@@ -173,6 +173,25 @@ html {
     position: absolute;
     transition: .4s;
     width: 18px;
+    z-index: 2;
+}
+
+.slider .fa-sun {
+    position: absolute;
+    left: 4px;
+    top: 4px;
+    font-size: 16px;
+    color: #ffd43b;
+    z-index: 1;
+}
+
+.slider .fa-moon {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    font-size: 16px;
+    color: #f1c40f;
+    z-index: 1;
 }
 
 input:checked + .slider {
