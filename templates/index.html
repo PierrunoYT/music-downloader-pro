@@ -20,9 +20,12 @@
                                 <i class="fab fa-spotify"></i>
                             </span>
                             Music Downloader Pro
-                            <button id="themeToggle" class="btn btn-outline-secondary btn-sm ms-2" onclick="toggleTheme()">
-                                <i class="fas fa-moon"></i>
-                            </button>
+                            <div class="theme-switch-wrapper ms-2">
+                                <label class="theme-switch" for="checkbox">
+                                    <input type="checkbox" id="checkbox" />
+                                    <div class="slider round"></div>
+                                </label>
+                            </div>
                         </h1>
                         
                         <div id="alertContainer">
@@ -242,23 +245,23 @@
         });
 
         // Theme handling
-        function setTheme(theme) {
+        // Theme Switch
+        const toggleSwitch = document.querySelector('#checkbox');
+        
+        function switchTheme(e) {
+            const theme = e.target.checked ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('theme', theme);
-            
-            const icon = document.querySelector('#themeToggle i');
-            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
         }
-
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            setTheme(newTheme);
-        }
-
+        
+        toggleSwitch.addEventListener('change', switchTheme);
+        
         // Initialize theme
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        setTheme(savedTheme);
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme) {
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            toggleSwitch.checked = currentTheme === 'dark';
+        }
 
         document.getElementById('convertForm').addEventListener('submit', function(e) {
             e.preventDefault();
