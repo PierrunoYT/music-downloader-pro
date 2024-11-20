@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 # Load environment variables from .env file
 load_dotenv()
 
-app = Flask(__name__, static_url_path='/static')
+app = Flask(__name__, static_url_path='', static_folder='static')
 
 # Get the absolute path of the current directory
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
