@@ -173,12 +173,19 @@ def download(filename):
             return "File not found", 404
         
         # Set correct MIME type based on file extension
-        if filename.endswith('.webm'):
-            mime_type = 'audio/webm'
-        elif filename.endswith('.ogg'):
-            mime_type = 'audio/ogg'
-        else:
-            mime_type = 'application/octet-stream'
+        mime_types = {
+            '.webm': 'audio/webm',
+            '.ogg': 'audio/ogg',
+            '.ico': 'image/x-icon',
+            '.png': 'image/png',
+            '.svg': 'image/svg+xml',
+            '.jpg': 'image/jpeg',
+            '.jpeg': 'image/jpeg',
+            '.gif': 'image/gif'
+        }
+        
+        file_ext = os.path.splitext(filename)[1].lower()
+        mime_type = mime_types.get(file_ext, 'application/octet-stream')
             
         return send_file(
             file_path,
