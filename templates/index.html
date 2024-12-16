@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Downloader Pro</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <h1 class="text-center mb-4 d-flex align-items-center justify-content-center">
+                            <span class="platform-icon">
+                                <i class="fab fa-youtube"></i>
+                                <i class="fab fa-spotify"></i>
+                            </span>
+                            Music Downloader Pro
+                            <div class="theme-switch-wrapper ms-3">
+                                <label class="theme-switch" for="checkbox">
+                                    <input type="checkbox" id="checkbox" />
+                                    <div class="slider round">
+                                        <i class="fas fa-sun"></i>
+                                        <i class="fas fa-moon"></i>
+                                    </div>
+                                </label>
+                            </div>
+                        </h1>
+                        
+                        <div id="alertContainer">
+                            {% if error %}
+                            <div class="alert alert-danger d-flex align-items-center" role="alert">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                {{ error }}
+                            </div>
+                            {% endif %}
+
+                            {% if success %}
+                            <div class="alert alert-success d-flex align-items-center" role="alert">
+                                <i class="fas fa-check-circle me-2"></i>
+                                <div>
+                                    Successfully converted: <strong>{{ video_title }}</strong>
+                                    <br>
+                                    <a href="{{ url_for('download', filename=filename) }}" class="alert-link">
+                                        <i class="fas fa-download me-1"></i> Download Audio
+                                    </a>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <form id="convertForm" method="POST" class="mb-4">
+                            <div class="mb-3">
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#url-tab" type="button">URL</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#search-tab" type="button">Search</button>
+                                    </li>
+                                </ul>
+                                
+                                <div class="tab-content mt-3">
+                                    <div class="tab-pane fade show active" id="url-tab">
+                                        <label for="url" class="form-label">
+                                            <i class="fas fa-link me-1"></i>
+                                            Enter URL
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="url" class="form-control" id="url" name="url" 
+                                                   pattern="^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|open\.spotify\.com\/.*track\/).+" 
+                                                   placeholder="YouTube or Spotify track URL...">
+                                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                                <i class="fas fa-download me-1"></i>
+                                                Download
+                                            </button>
+                                        </div>
+                                        <div class="form-text text-muted">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            Paste a YouTube/Spotify video, track, or playlist URL
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="tab-pane fade" id="search-tab">
+                                        <label for="search" class="form-label">
+                                            <i class="fas fa-search me-1"></i>
+                                            Search Song
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="search" name="search" 
+                                                   placeholder="Enter song name...">
+                                            <button type="button" class="btn btn-primary" id="searchBtn">
+                                                <i class="fas fa-search me-1"></i>
+                                                Search
+                                            </button>
+                                        </div>
+                                        <div id="searchResults" class="list-group mt-3">
+                                            <!-- Search results will be inserted here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div id="progressContainer" class="d-none">
+                            <div class="progress mb-3" style="height: 20px;">
+                                <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                                     role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            </div>
+                            <p id="statusText" class="text-center text-muted">
+                                <i class="fas fa-spinner fa-spin me-1"></i>
+                                <span>Starting download...</span>
+                            </p>
+                        </div>
+
+                        <div class="text-center text-muted mt-4">
+                            <small>
+                                <i class="fas fa-shield-alt me-1"></i>
+                                This tool uses yt-dlp and the official Spotify API
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Search functionality
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            const query = document.getElementById('search').value;
+            if (!query) return;
+            
+            const searchResults = document.getElementById('searchResults');
+            searchResults.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Searching...</div>';
+            
+            fetch('/search?q=' + encodeURIComponent(query))
+                .then(response => response.json())
+                .then(data => {
+                    searchResults.innerHTML = '';
+                    if (data.length === 0) {
+                        searchResults.innerHTML = '<div class="text-center text-muted">No results found</div>';
+                        return;
+                    }
+                    
+                    data.forEach(track => {
+                        const button = document.createElement('button');
+                        button.className = 'list-group-item list-group-item-action';
+                        button.innerHTML = `
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">${track.title}</h6>
+                                    <small class="text-muted">${track.artist}</small>
+                                </div>
+                                <button class="btn btn-sm btn-primary download-btn" data-url="${track.url}">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        `;
+                        
+                        button.querySelector('.download-btn').addEventListener('click', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            
+                            // Show progress UI
+                            const progressContainer = document.getElementById('progressContainer');
+                            const progressBar = document.getElementById('progressBar');
+                            const statusText = document.getElementById('statusText');
+                            const alertContainer = document.getElementById('alertContainer');
+                            
+                            progressContainer.classList.remove('d-none');
+                            progressBar.style.width = '0%';
+                            progressBar.classList.remove('bg-danger');
+                            progressBar.classList.add('progress-bar-animated');
+                            alertContainer.innerHTML = '';
+                            
+                            // Update status messages
+                            const stages = [
+                                { progress: 20, message: 'Fetching track information...' },
+                                { progress: 40, message: 'Preparing download...' },
+                                { progress: 60, message: 'Downloading audio...' },
+                                { progress: 80, message: 'Converting to MP3...' },
+                                { progress: 95, message: 'Finalizing...' }
+                            ];
+                            
+                            let currentStage = 0;
+                            const interval = setInterval(() => {
+                                if (currentStage < stages.length) {
+                                    updateProgress(
+                                        stages[currentStage].progress,
+                                        stages[currentStage].message
+                                    );
+                                    currentStage++;
+                                }
+                            }, 1500);
+                            
+                            // Submit form
+                            document.getElementById('url').value = this.dataset.url;
+                            const form = document.getElementById('convertForm');
+                            
+                            fetch(form.action, {
+                                method: 'POST',
+                                body: new FormData(form)
+                            })
+                            .then(response => response.text())
+                            .then(html => {
+                                clearInterval(interval);
+                                updateProgress(100, 'Completed!');
+                                
+                                // Parse the response HTML
+                                const parser = new DOMParser();
+                                const doc = parser.parseFromString(html, 'text/html');
+                                
+                                // Check for success or error messages
+                                const successAlert = doc.querySelector('.alert-success');
+                                const errorAlert = doc.querySelector('.alert-danger');
+                                
+                                if (successAlert) {
+                                    showAlert(successAlert.innerHTML, 'success');
+                                } else if (errorAlert) {
+                                    showAlert(errorAlert.textContent, 'danger');
+                                }
+                                
+                                setTimeout(() => {
+                                    progressContainer.classList.add('d-none');
+                                }, 1000);
+                            })
+                            .catch(error => {
+                                clearInterval(interval);
+                                showAlert('An error occurred while processing your request. Please try again.', 'danger');
+                                progressBar.classList.remove('progress-bar-animated');
+                                progressBar.classList.add('bg-danger');
+                            });
+                        });
+                        
+                        searchResults.appendChild(button);
+                    });
+                })
+                .catch(error => {
+                    searchResults.innerHTML = '<div class="alert alert-danger">Error performing search</div>';
+                });
+        });
+
+        // Theme handling
+        // Theme Switch
+        const toggleSwitch = document.querySelector('#checkbox');
+        
+        function switchTheme(e) {
+            const theme = e.target.checked ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        }
+        
+        toggleSwitch.addEventListener('change', switchTheme);
+        
+        // Initialize theme
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme) {
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            toggleSwitch.checked = currentTheme === 'dark';
+        }
+
+        document.getElementById('convertForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const form = this;
+            const submitBtn = document.getElementById('submitBtn');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const statusText = document.getElementById('statusText');
+            const alertContainer = document.getElementById('alertContainer');
+            
+            // Validate URL
+            const urlInput = document.getElementById('url');
+            const urlPattern = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|open\.spotify\.com\/.*track\/).+/;
+            if (!urlPattern.test(urlInput.value)) {
+                showAlert('Please enter a valid YouTube or Spotify URL', 'danger');
+                return;
+            }
+
+            // Reset UI
+            submitBtn.disabled = true;
+            progressContainer.classList.remove('d-none');
+            progressBar.style.width = '0%';
+            progressBar.classList.remove('bg-danger');
+            progressBar.classList.add('progress-bar-animated');
+            alertContainer.innerHTML = '';
+            
+            // Update status messages
+            const stages = [
+                { progress: 20, message: 'Fetching track information...' },
+                { progress: 40, message: 'Preparing download...' },
+                { progress: 60, message: 'Downloading audio...' },
+                { progress: 80, message: 'Converting to MP3...' },
+                { progress: 95, message: 'Finalizing...' }
+            ];
+            
+            let currentStage = 0;
+            const interval = setInterval(() => {
+                if (currentStage < stages.length) {
+                    updateProgress(
+                        stages[currentStage].progress,
+                        stages[currentStage].message
+                    );
+                    currentStage++;
+                }
+            }, 1500);
+
+            // Submit form
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form)
+            })
+            .then(response => response.text())
+            .then(html => {
+                clearInterval(interval);
+                updateProgress(100, 'Completed!');
+                
+                // Parse the response HTML
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Check for success or error messages
+                const successAlert = doc.querySelector('.alert-success');
+                const errorAlert = doc.querySelector('.alert-danger');
+                
+                if (successAlert) {
+                    showAlert(successAlert.innerHTML, 'success');
+                } else if (errorAlert) {
+                    showAlert(errorAlert.textContent, 'danger');
+                }
+                
+                submitBtn.disabled = false;
+                setTimeout(() => {
+                    progressContainer.classList.add('d-none');
+                }, 1000);
+            })
+            .catch(error => {
+                clearInterval(interval);
+                showAlert('An error occurred while processing your request. Please try again.', 'danger');
+                progressBar.classList.remove('progress-bar-animated');
+                progressBar.classList.add('bg-danger');
+                submitBtn.disabled = false;
+            });
+        });
+
+        function updateProgress(progress, message) {
+            const progressBar = document.getElementById('progressBar');
+            const statusText = document.getElementById('statusText');
+            
+            progressBar.style.width = progress + '%';
+            progressBar.setAttribute('aria-valuenow', progress);
+            
+            if (message) {
+                statusText.innerHTML = `
+                    <i class="fas fa-spinner fa-spin me-1"></i>
+                    <span>${message}</span>
+                `;
+            }
+        }
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const icon = type === 'success' ? 'check-circle' : 'exclamation-circle';
+            
+            alertContainer.innerHTML = `
+                <div class="alert alert-${type} d-flex align-items-center" role="alert">
+                    <i class="fas fa-${icon} me-2"></i>
+                    ${message}
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

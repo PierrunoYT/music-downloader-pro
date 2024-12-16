@@ -1,0 +1,6 @@
+flask
+jinja2
+yt-dlp
+spotipy
+spotdl
+python-dotenv
